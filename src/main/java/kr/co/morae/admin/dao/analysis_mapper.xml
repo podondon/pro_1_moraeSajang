@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	"-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+<mapper namespace="kr.co.morae.admin.dao.AnalysisDao">
+<select id="adminanalysisAdress" resultType="kr.co.morae.admin.dto.RegionAnalysisDto">
+<![CDATA[
+	SELECT re.gbDetailAddress , count(re.gbNo)AS topAddress FROM groupBuyingPost g INNER JOIN groupBuyingRegions re ON g.gbNo = re.gbNo 
+	WHERE g.gbState = '완료' AND g.finishDate >= #{param1} AND g.finishDate <=#{param2}
+	GROUP BY re.gbDetailAddress HAVING count(re.gbNo) ORDER BY count(re.gbNo) desc LIMIT 6
+]]>	
+</select>
+<select id="categorydraw" resultType="kr.co.morae.admin.dto.CategoryAnalysisDto">
+	SELECT categoryType FROM category
+</select>
+<select id="adminanalysisCategory" resultType="kr.co.morae.admin.dto.CategoryAnalysisDto">
+	<![CDATA[
+	SELECT c.categoryType,
+       SUM(CASE WHEN g.gbState = '완료' THEN 1 ELSE 0 END) AS sucCate,
+       SUM(CASE WHEN g.gbState = '진행' THEN 1 ELSE 0 END) AS ingCate,
+       SUM(CASE WHEN g.gbState = '취소' THEN 1 ELSE 0 END) AS falCate,
+       SUM(CASE WHEN g.gbState = '완료' THEN 1 ELSE 0 END +
+           CASE WHEN g.gbState = '진행' THEN 1 ELSE 0 END +
+           CASE WHEN g.gbState = '취소' THEN 1 ELSE 0 END) AS su
+FROM groupBuyingPost g
+INNER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.finishDate >= #{param1} AND g.finishDate <=#{param2}
+GROUP BY c.categoryType
+ORDER BY su DESC;
+	]]>
+</select>
+
+<select id="adminanalysisTopUser" resultType="kr.co.morae.admin.dto.RecruitmentAnalysisDto">
+<![CDATA[
+	SELECT g.userId, COALESCE(COUNT(g.gbNo), 0) AS al, COALESCE(s.su, 0) AS su,
+  CASE
+    WHEN COALESCE(COUNT(g.gbNo), 0) > 0
+    THEN
+      CAST(COALESCE(s.su, 0) * 100.0 / COALESCE(COUNT(g.gbNo), 0) AS DECIMAL(10, 2))
+    ELSE 0.00
+  END AS sucrate
+FROM groupBuyingPost g
+LEFT JOIN (
+  SELECT userId, COUNT(gbNo) AS su
+  FROM groupBuyingPost
+  WHERE gbState = '완료'
+  GROUP BY userId
+) s ON g.userId = s.userId
+WHERE g.finishDate >= #{param1} AND g.finishDate <= #{param2}
+GROUP BY g.userId, s.su
+HAVING COALESCE(COUNT(g.gbNo), 0) > 0
+ORDER BY s.su DESC
+LIMIT 5;
+	]]>
+</select>
+<select id="adminanalysisTopPoint" resultType="kr.co.morae.admin.dto.PointAnalysisDto">
+	<![CDATA[
+		SELECT chargeDate ,sum(chargePrice)AS chargePoint FROM chargeHistory
+		WHERE chargeDate >= #{param1} AND chargeDate <=#{param2}
+		GROUP BY chargeDate HAVING sum(chargePrice)
+		ORDER BY chargePoint DESC LIMIT 5
+	]]>
+</select>
+
+<select id="adminanalysisgbState" resultType="kr.co.morae.admin.dto.GroupBuyAnalysisDto" parameterType="hashmap">
+<![CDATA[
+	SELECT stateUpDate,
+  COALESCE(COUNT(stateUpDate), 0) AS stateall,
+  COALESCE(SUM(CASE WHEN hState = #{stateBar} THEN 1 ELSE 0 END), 0) AS stateing,
+  COALESCE(
+    CAST((SUM(CASE WHEN hState = #{stateBar} THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(stateUpDate), 0)) AS DECIMAL(10, 2)),
+    0
+  ) AS stateper
+FROM gbStateHistory
+WHERE stateUpDate BETWEEN #{bfirstSearchDate} AND #{blastSearchDate}
+GROUP BY stateUpDate ORDER BY stateall DESC LIMIT 5
+]]>
+</select>
+</mapper>

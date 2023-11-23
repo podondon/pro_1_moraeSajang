@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC	"-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+<mapper namespace="kr.co.morae.admin.dao.GroupBuyManagementDao">
+<select id="adminGroupBuyList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param1} OFFSET #{param2}
+</select>
+<select id="adminGroupBuyListtotalPage" resultType="int">
+	SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost
+</select>
+<select id="adminGroupBuycheckList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.blockState=#{param1}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param2} OFFSET #{param3}
+</select>
+<select id="adminGroupBucheckListtotalPage" resultType="int">
+SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost where blockState=#{param2}
+</select>
+<select id="adminGroupBuySerUserList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.userId=#{param1}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param2} OFFSET #{param3}
+</select>
+<select id="adminGroupBuyListSerUsertotalPage" resultType="int">
+SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost where userId=#{param2}
+</select>
+<select id="adminGroupBuySerUserCheckList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.blockState=#{param1} AND g.userId=#{param2}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param3} OFFSET #{param4}
+</select>
+<select id="adminGroupBuySerUserCheckListtotalPage" resultType="int">
+SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost 
+where blockState=#{param2} AND userId=#{param3}
+</select>
+<select id="adminGroupBuyIntList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+<![CDATA[
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+where g.regDate >= #{param1} and g.regDate <= #{param2}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param3} OFFSET #{param4}
+ ]]>	
+</select>
+<select id="adminGroupBuyListInttotalPage" resultType="int">
+	<![CDATA[
+	SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost 
+	where regDate >= #{param2} and regDate <= #{param3}
+]]>	
+</select>
+<select id="adminGroupBuycheckIntList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+<![CDATA[
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.blockState=#{param1} AND g.regDate >= #{param2} and g.regDate <= #{param3}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param4} OFFSET #{param5}
+]]>	
+</select>
+<select id="adminGroupBucheckIntListtotalPage" resultType="int">
+<![CDATA[
+SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost 
+where blockState=#{param2} and regDate >= #{param3} and regDate <= #{param4}
+]]>	
+</select>
+<select id="adminGroupBuySerUserIntList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+<![CDATA[
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.userId=#{param1} AND g.regDate >= #{param2} and g.regDate <= #{param3}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param4} OFFSET #{param5}
+]]>	
+</select>
+<select id="adminGroupBuyIntListSerUsertotalPage" resultType="int">
+<![CDATA[
+SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost 
+where userId=#{param2} AND regDate >= #{param3} and regDate <= #{param4}
+]]>	
+</select>
+<select id="adminGroupBuySerUserCheckIntList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+<![CDATA[
+SELECT g.gbNo ,g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+       COUNT(j.userId) AS joinPeople, c.categoryType,
+       (SELECT gi.newName
+        FROM groupBuyingImage gi
+        WHERE gi.gbNo = g.gbNo
+        LIMIT 1) AS firstFileName
+FROM groupBuyingPost g
+LEFT OUTER JOIN groupBuyingJoining j ON g.gbNo = j.gbNo
+LEFT OUTER JOIN category c ON g.categoryNo = c.categoryNo
+WHERE g.blockState=#{param1} AND g.userId=#{param2} AND g.regDate >= #{param3} and g.regDate <= #{param4}
+GROUP BY g.title, g.userId, g.startDate, g.finishDate, g.recruitPeople, g.joinPrice, g.gbState, g.categoryNo,
+         c.categoryType,g.gbNo
+ORDER BY g.regDate DESC
+LIMIT #{param5} OFFSET #{param6}
+]]>
+</select>
+<select id="adminGroupBuySerUserCheckIntListtotalPage" resultType="int">
+<![CDATA[
+SELECT CEIL(COUNT(gbNo)/#{param1}) AS pages FROM groupBuyingPost 
+where blockState=#{param2} AND userId=#{param3} AND regDate >= #{param4} and regDate <= #{param5}
+]]>
+</select>
+
+<select id="admingbdetail" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+SELECT gb.gbNo, gb.gbContent,gb.recruitPeople, gb.title, gb.finishDate, gb.startDate, gb.joinPrice, gb.gbState, loc.place, loc.gbDetailAddress,
+    c.categoryType, gb.userId,gb.blockState, 
+    (SELECT nickname
+     FROM user u
+	WHERE u.userid = gb.userId   
+    )nickname,
+    (SELECT count(userId) 
+     FROM groupBuyingJoining 
+     WHERE groupBuyingJoining.gbNo = gb.gbNo) joinPeople,  
+    (SELECT count(reviewNo)
+     FROM userReview u2 
+     WHERE u2.userId = gb.userId and u2.reviewNo = 1
+    ) tradeAgainNum,
+    (SELECT COUNT(reviewNo)
+     FROM userReview u2 
+     WHERE u2.userId = gb.userId and u2.reviewNo = 2
+    ) justOkayNum, 
+    (SELECT count(reviewNo)
+     FROM userReview u2 
+     WHERE u2.userId = gb.userId and u2.reviewNo = 3
+    ) notInterestedNum,
+    (SELECT count(g.userId)
+     FROM groupBuyingJoining g
+     WHERE g.userId = g.gbNo =#{param1}
+    ) isJoining
+FROM 
+    groupBuyingPost gb 
+    LEFT OUTER JOIN groupBuyingRegions loc on gb.gbNo = loc.gbNo
+    LEFT OUTER JOIN category c on gb.categoryNo=c.categoryNo 
+WHERE gb.gbNo = #{param1};
+</select>
+
+<update id="adminBlockState">
+UPDATE groupBuyingPost SET blockState = #{param1} WHERE gbNo = #{param2}
+</update>
+<update id="admingbState">
+UPDATE groupBuyingPost
+SET gbState = '취소'
+WHERE gbNo = #{param1}
+AND recruitPeople != (SELECT COUNT(userId) FROM groupBuyingJoining WHERE gbNo = #{param1});
+</update>
+<insert id="admingbHis">
+INSERT INTO gbStateHistory (gbNo,hState,stateUpDate) VALUES (#{param1},'취소',#{param2})
+</insert>
+<select id="admincount" resultType="int">
+SELECT COUNT(*) AS count
+FROM gbStateHistory
+WHERE gbNo = #{param1}
+  AND hState = '취소'
+</select>
+</mapper>

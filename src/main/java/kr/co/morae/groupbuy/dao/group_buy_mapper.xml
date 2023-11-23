@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.morae.groupbuy.dao.GroupBuyDao">
+<!-- 글 저장 -->
+<insert id="gbRegister" parameterType="kr.co.morae.groupbuy.dto.GroupBuyDto" useGeneratedKeys="true"
+        keyProperty="gbNo" keyColumn="gbNo">
+INSERT INTO groupBuyingPost (userId,categoryNo,gbContent,title,recruitPeople,finishDate,startDate,joinPrice,gbState,blockState) 
+VALUES (#{userId},(
+SELECT categoryNo
+FROM category
+WHERE categoryType = #{categoryType}
+),#{gbContent},#{title},#{recruitPeople},#{finishDate},#{startDate},#{joinPrice},#{gbState},'N');
+</insert>
+
+<!-- 이미지 저장 -->
+<insert id="gbSavePhoto" parameterType="String">
+INSERT INTO groupBuyingImage (gbNo, newName)
+VALUES (#{param1}, #{param2});
+</insert>
+
+<!-- 지역 저장 -->
+<insert id="gbRegionRegister" parameterType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+INSERT INTO groupBuyingRegions (gbNo, parcelAddress, gbDetailAddress, place)
+VALUES(#{gbNo}, #{parcelAddress}, #{gbDetailAddress}, #{place});
+</insert>
+
+<!-- 글 상세정보 가져오기 -->
+<select id="getGbDetail" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+SELECT gb.gbNo, gb.gbContent,gb.recruitPeople, gb.title, gb.finishDate, gb.startDate, gb.joinPrice, gb.gbState, loc.place, loc.gbDetailAddress,
+    c.categoryType, gb.userId,
+    (SELECT nickname
+     FROM user u
+	WHERE u.userid = gb.userId   
+    )nickname,
+    (SELECT count(userId) 
+     FROM groupBuyingJoining 
+     WHERE groupBuyingJoining.gbNo = gb.gbNo) joinPeople,  
+    (SELECT count(reviewNo)
+     FROM userReview u2 
+     WHERE u2.userId = gb.userId and u2.reviewNo = 1
+    ) tradeAgainNum,
+    (SELECT COUNT(reviewNo)
+     FROM userReview u2 
+     WHERE u2.userId = gb.userId and u2.reviewNo = 2
+    ) justOkayNum, 
+    (SELECT count(reviewNo)
+     FROM userReview u2 
+     WHERE u2.userId = gb.userId and u2.reviewNo = 3
+    ) notInterestedNum,
+    (SELECT count(g.userId)
+     FROM groupBuyingJoining g
+     WHERE g.userId = #{param2} and g.gbNo =#{param1}
+    ) isJoining
+FROM 
+    groupBuyingPost gb 
+    LEFT OUTER JOIN groupBuyingRegions loc on gb.gbNo = loc.gbNo
+    LEFT OUTER JOIN category c on gb.categoryNo=c.categoryNo 
+WHERE gb.gbNo = #{param1};
+</select>
+
+
+<!-- 사진 이름 가져오기 -->
+<select id="getPhotoNames" parameterType="int" resultType="String">
+SELECT newName
+FROM groupBuyingImage 
+WHERE gbNo = #{param1}
+
+</select>
+
+<select id="isgbJoining" resultType="hashMap" >
+SELECT recruitPeople, userId ,
+(SELECT count(userId)
+FROM groupBuyingJoining g2 
+WHERE g2.gbNo =#{param1})joinPeople,
+(SELECT count(userId)
+FROM groupBuyingJoining g2 
+WHERE g2.gbNo =#{param1} AND g2.userId = #{param2}) isgbJoining
+FROM groupBuyingPost
+WHERE gbNo = #{param1};
+</select>
+
+<!-- 공구 참여 -->
+<insert id="gbJoin">
+insert into groupBuyingJoining (gbNo, userId, joinDate, joinState)
+values (#{param1}, #{param2}, curDate(),'N');
+</insert>
+
+<!-- 공구 참여 포인트 증감 -->
+<insert id="insertPoint">
+insert into pointHistory (gbNo, userId, pointMonney, pointReason, pointDate)
+values (#{param1}, #{param2}, #{param3}, #{param4}, curdate());
+</insert>
+
+
+
+<!-- 공구글 상태 변경 -->
+<update id="modifyGbState">
+UPDATE groupBuyingPost
+SET gbState=#{param2}, blockState = #{param3}
+WHERE gbNo=#{param1};
+</update>
+
+
+<!-- 신고 -->
+<insert id="report" parameterType="hashmap">
+insert into report (userId, reportContent, reportRegDate, reportType, uniqueNo, processState)
+<if test="commNo == -1">
+values (#{userId}, #{reportContent}, curdate(), '글', #{gbNo}, '미처리');
+</if>
+<if test="commNo != -1">
+values (#{userId}, #{reportContent}, curdate(), '댓글', #{commNo}, '미처리');
+</if>
+</insert>
+
+<select id="getGbList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto" parameterType="kr.co.morae.groupbuy.dto.SearchOptionDto">
+SELECT gb.gbNo, gb.recruitPeople, gb.title, gb.finishDate, gb.startDate, gb.joinPrice,
+    c.categoryType, gb.userId,
+    (SELECT nickname
+     FROM user u
+	WHERE u.userid = gb.userId   
+    )nickname,
+    (SELECT count(userId) 
+     FROM groupBuyingJoining 
+     WHERE groupBuyingJoining.gbNo = gb.gbNo) joinPeople,
+     (SELECT g2.newName
+     FROM groupBuyingImage g2
+     WHERE g2.gbNo = gb.gbNo
+     ORDER BY g2.imgNo
+     LIMIT 1) firstFileName 
+FROM 
+    groupBuyingPost gb 
+    LEFT OUTER join groupBuyingRegions loc ON gb.gbNo = loc.gbNo
+    LEFT OUTER join category c ON gb.categoryNo=c.categoryNo
+WHERE gb.blockState = 'N' AND gb.gbState like '진행'
+    <if test="'all'==region and category != 0 and keyWord == null">
+        AND c.categoryNo=#{category}
+    </if>
+    <if test="'all'==region and category == 0 and keyWord != null">
+        AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    <if test="'all'==region and category != 0 and keyWord != null">
+        AND c.categoryNo=#{category} AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    
+    <if test="'all'!=region and category == 0 and keyWord == null">
+        AND loc.gbDetailAddress=#{region} 
+    </if>
+    <if test="'all'!=region and category != 0 and keyWord == null">
+        AND loc.gbDetailAddress=#{region} AND c.categoryNo=#{category}
+    </if>
+    <if test="'all'!=region and category == 0 and keyWord != null">
+        AND loc.gbDetailAddress=#{region} AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    <if test="'all'!=region and category != 0 and keyWord != null">
+        AND loc.gbDetailAddress=#{region} AND c.categoryNo=#{category} AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    ORDER by gb.gbNo DESC
+    LIMIT 8 OFFSET #{offset}
+</select> 
+
+<!-- 검색 옵션에 따른 게시물 총 개수 -->
+<select id="getTotalgbCnt" resultType="int" parameterType="kr.co.morae.groupbuy.dto.SearchOptionDto">
+SELECT count(gb.gbNo) totalCnt
+FROM 
+    groupBuyingPost gb 
+    LEFT OUTER join groupBuyingRegions loc ON gb.gbNo = loc.gbNo
+    LEFT OUTER join category c ON gb.categoryNo=c.categoryNo
+WHERE gb.blockState = 'N' AND gb.gbState like '진행'
+    <if test="'all'==region and category != 0 and keyWord == null">
+        AND c.categoryNo=#{category}
+    </if>
+    <if test="'all'==region and category == 0 and keyWord != null">
+        AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    <if test="'all'==region and category != 0 and keyWord != null">
+        AND c.categoryNo=#{category} AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    
+    <if test="'all'!=region and category == 0 and keyWord == null">
+        AND loc.gbDetailAddress=#{region} 
+    </if>
+    <if test="'all'!=region and category != 0 and keyWord == null">
+        AND loc.gbDetailAddress=#{region} AND c.categoryNo=#{category}
+    </if>
+    <if test="'all'!=region and category == 0 and keyWord != null">
+        AND loc.gbDetailAddress=#{region} AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+    <if test="'all'!=region and category != 0 and keyWord != null">
+        AND loc.gbDetailAddress=#{region} AND c.categoryNo=#{category} AND gb.title LIKE CONCAT('%',#{keyWord},'%')
+    </if>
+</select> 
+
+
+<select id="checkGbState" resultType="kr.co.morae.groupbuy.dto.GbStateCheckDto">
+
+SELECT g.gbNo, DATE_ADD(g.finishDate , INTERVAL 1 DAY)finishDate, DATE_ADD(g.finishDate , INTERVAL 10 DAY)completeDate, g.recruitPeople, 
+COUNT(g2.userId)joinNum, g.joinPrice, g.userId,
+(SELECT COUNT(joinState)
+FROM groupBuyingJoining g3 
+WHERE g3.gbNo = g.gbNo AND joinState LIKE 'Y'
+) completeCnt
+FROM groupBuyingPost g LEFT OUTER JOIN groupBuyingJoining g2 
+ON g.gbNo = g2.gbNo
+WHERE g.blockState LIKE 'N' AND g.gbState LIKE '진행'
+group by g.gbNo
+</select>
+
+<!-- 공구 히스토리 insert -->
+<insert id="insertGbStateHistory">
+INSERT INTO gbStateHistory (gbNo, hState) VALUES (#{param1}, #{param2});
+</insert>
+
+<select id="getJoinUser" resultType="string">
+select userId from groupBuyingJoining where gbNo = #{param1};
+</select>
+</mapper>

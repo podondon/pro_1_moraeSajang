@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+
+<mapper namespace="kr.co.morae.mypage.dao.MypageDao">
+
+	<select id="myInfo"
+		resultType="kr.co.morae.mypage.dto.MypageDto">
+		SELECT u.userId ,u.nickname ,u.name ,u.email ,u.reg_date
+		,CONCAT(ua.streetAddress ,SPACE(1) ,ua.detailAddress) as addr
+		FROM user u ,userAddress ua WHERE u.userId = #{param1} AND ua.userId = #{param1}
+	</select>
+
+	<select id="totalPoint" resultType="int">
+		SELECT NVL(SUM(total),0) FROM (SELECT SUM(pointMonney) as total FROM
+		pointHistory WHERE userId = #{param1}
+		UNION ALL
+		SELECT SUM(chargePrice) as total FROM chargeHistory WHERE userId = #{param1})
+		as total
+	</select>
+
+	<select id="review" resultType="map">
+		SELECT
+		COUNT(CASE WHEN reviewNo = 1 then reviewNo end) as high
+		,COUNT(CASE WHEN reviewNo = 2 then reviewNo end) as 'mid'
+		,COUNT(CASE WHEN reviewNo = 3 then reviewNo end) as low
+		FROM userReview WHERE
+		userId = #{param1}
+	</select>
+
+	<insert id="alarmOff">
+		INSERT INTO userAuth (userId, authNo) VALUES (#{param1},3)
+	</insert>
+
+	<delete id="alarmOn">
+		DELETE FROM userAuth WHERE userId = #{param1}
+	</delete>
+	
+	<select id="alarmToggle" resultType="int">
+		SELECT COUNT(authNo) FROM userAuth WHERE userId = #{param1}
+	</select>
+
+	<select id="overnickname" resultType="int">
+		SELECT COUNT(nickname) FROM user
+			WHERE nickname = #{param1}	
+	</select>
+	
+	<update id="updateData" parameterType="map">
+	UPDATE user SET nickname = #{nickname}, password = #{pw} where userId = #{id} 	
+	</update>
+	
+	<update id="updateAddr" parameterType="map">
+	UPDATE userAddress SET streetAddress = #{addr1},detailAddress = #{addr2} 
+	where userId = #{id}
+	</update>
+	
+</mapper>

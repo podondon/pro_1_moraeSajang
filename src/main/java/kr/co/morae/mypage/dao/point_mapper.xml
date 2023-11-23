@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.morae.mypage.dao.PointDao">
+	<select id="checkUser" resultType="int" parameterType="java.lang.String">
+		select count(userId) from user where userId =#{param1} and name = #{param2};
+	</select>
+	
+	<insert id="chargeGo" parameterType="Map">
+		INSERT INTO chargeHistory (userId,chargePrice,depositor) VALUES (#{param1},#{param3},#{param2});
+	</insert>
+	
+	<select id="myPoint" resultType="int" parameterType="java.lang.String">
+		SELECT SUM(value) AS totalSum
+			FROM (
+			    SELECT chargePrice AS value FROM chargeHistory WHERE userId = #{param1}
+			    UNION ALL
+			    SELECT pointMonney AS value FROM pointHistory WHERE userId = #{param1}
+			) AS totalSum;
+	</select>
+	
+	<select id="useList" resultType="kr.co.morae.mypage.dto.PointDto">
+		select p.userId, p.pointReason, p.pointMonney, p.pointDate, SUBSTRING(g.title, 1, 10) as title
+			from pointHistory p
+				left join groupBuyingPost g on p.gbNo = g.gbNo
+				left join user u on p.userId = u.userId
+					where p.userId = #{param1} order by pointNo desc limit 10 offset #{param2}
+	</select>
+	
+	<select id="usePages" resultType="int">
+		select ceil(count(pointNo)/10) as pages from pointHistory where userId = #{param1}
+	</select>
+	
+	<select id="chargeList" resultType="kr.co.morae.mypage.dto.PointChargeDto">
+		select userId, chargePrice, chargeDate, depositor from chargeHistory
+			where userId = #{param1} order by chargeNo desc limit 10 offset #{param2}
+	</select>
+	
+	<select id="chargePages" resultType="int">
+		select ceil(count(chargeNo)/10) as pages from chargeHistory where userId = #{param1}
+	</select>
+</mapper>

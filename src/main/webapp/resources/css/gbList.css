@@ -1,0 +1,179 @@
+@charset "UTF-8";
+.recruit-img-span{
+	float:right;	
+	
+}
+
+img.detail-joinicon{
+	max-width:36px;
+	max-height:36px;
+}
+div.card-row{
+    display: inline-flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content:center;
+    width:auto;
+    height: 440px;
+    margin-bottom:40px;
+    
+    
+}
+
+div.card-row-spacing{
+	width: 1200px;
+}
+div.container{
+	margin-top: 30px;
+	display: flex;
+	justify-content: center;
+	height: inherit;
+}
+button.region{
+	width: 80px;
+	height: 40px;
+	border-style: none;
+	padding:0px;
+	margin:0;
+	border-radius:5px;
+	font-size: 1em;
+}
+div.card{
+	min-width:260px;
+    width : 240px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 2px solid #FFBC38;
+    height: 420px;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+div.elem-container{
+	width:1200px;
+    margin:0 auto;
+}
+.card-img-top{
+    height: 44%;
+    width: 100%;
+    border-bottom: 1px solid #FFBC38;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-position:center;
+    /* 이미지를 최대한 안짤리게 한다. */
+    background-size: 100% 100%;
+    /* 배경 반복 금지 */
+    background-repeat:no-repeat;
+}
+div.card-body{
+    margin: 5px 15px 15px 15px;
+}
+.recruit-img{
+    background-color: aquamarine;
+    width: 40px;
+    height: 40px;
+}
+
+p.gbno-hidden{
+	display:none;
+}
+body{
+	margin-top: 100px;
+
+	}
+span.card-category{
+	border-radius:10px;
+    padding: 5px;
+    font-size: 80%;
+    font-weight:600%;
+    float:right;
+}
+.current{
+    background-color: #FFBC38;
+}
+.no-result{
+	font-size: 20px;
+	color: darkgray;
+	margin: 0 auto;
+	text-align: center;
+	margin-top: 100px;
+}
+div.title{
+    font-size: 20px;
+    height:30px;
+    overflow: hidden;
+}
+div.writer{
+	color:#FFBC38;
+}
+span.recruit-period{
+	margin-left:10px;
+}
+div.date-div{
+	margin-top:10px;
+}
+div.date{
+	margin-bottom:10px;
+}
+div.section{
+	margin-top:8px;
+	width:inherit;
+	overflow:auto; 
+	margin-bottom:10px;
+}
+#info__id {
+  position: relative;
+  margin-right: 10px;
+   
+}
+
+#info__id button {
+	border-style:none;
+	background-color: transparent;
+  	position: absolute;
+  	width: 35px;
+  	height: 35px;
+  	top: 0;
+  	bottom: 0;
+  	right: 5px;
+  	margin: auto 0;
+  	border-radius: 3px;
+}
+div.search1{
+	display: flex;
+	margin-bottom: 30px;
+	width: inherit;
+}
+.wirte{
+	float: right;
+	border-radius: 5px;
+	font-size: 16px;
+	padding: 5px 10px;
+}
+.gb-list-container{
+	padding-left: 20px;
+	padding-right: 10px;
+}
+div.search2{
+	margin-bottom: 20px;
+	width: inherit;
+}
+#search-keyWord{
+	width: 300px;
+  	height: 35px;
+  	border-color: darkgray;
+  	border-radius:5px;
+}
+#commentWriteBox{
+	display: flex;
+	justify-content: center;
+}
+#categoryType{
+	border-radius:5px;
+}
+.comm-btn{
+	background-color: #FFBC38;
+    border: 2px solid #FFBC38;
+    color:white;
+    border-radius: 5px;
+}

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+<mapper namespace="kr.co.morae.admin.dao.ReportManagementDao">	
+	
+	
+	<select id="listall" resultType="map" >
+		select reportNo ,userId ,reportRegDate ,reportType,uniqueNo,processState
+		from report order by reportRegDate desc LIMIT 10 OFFSET #{param1}
+	</select>
+	
+	<select id="allnum" resultType="Integer" >
+		select count(reportNo)/10  from report
+	</select>
+	
+	<select id="liststate" resultType="map" >
+		select reportNo ,userId ,reportRegDate ,reportType,uniqueNo,processState 
+		from report where processState = #{param1} order by reportRegDate desc LIMIT 10 OFFSET #{param2}
+	</select>
+
+	<select id="statenum" resultType="Integer" >
+		select count(reportNo)/10  from report where processState = #{param1}
+	</select>
+	
+	<!-- state+all -->
+	<select id="reserchallB" resultType="map" >
+		select reportNo ,userId ,reportRegDate ,reportType,uniqueNo,processState
+		from report where uniqueNo = #{param1} and reportType="글" order by reportRegDate desc LIMIT 10 OFFSET #{param2}
+	</select>
+	
+	<select id="reserchallR" resultType="map" >
+		select reportNo ,userId ,reportRegDate ,reportType,uniqueNo,processState
+		from report where uniqueNo = #{param1} and reportType="댓글" order by reportRegDate desc LIMIT 10 OFFSET #{param2}
+	</select>
+	
+	<select id="renum" resultType="Integer">
+		select count(reportNo)/10  from report where uniqueNo = #{param1}
+	</select>
+	
+	<!-- state+BR -->
+	<select id="reserchstateB" resultType="map" >
+		select reportNo ,userId ,reportRegDate ,reportType,uniqueNo,processState
+		from report where uniqueNo = #{param1} and reportType="글" and  processState=#{param2}
+		order by reportRegDate desc LIMIT 10 OFFSET #{param3}
+	</select>
+	
+	<select id="reserchstateR" resultType="map" >
+		select reportNo ,userId ,reportRegDate ,reportType,uniqueNo,processState
+		from report where uniqueNo = #{param1} and reportType="댓글" and  processState=#{param2}
+		order by reportRegDate desc LIMIT 10 OFFSET #{param3}
+	</select>	
+	
+	<select id="reportDetailB" resultType="kr.co.morae.admin.dto.ReportManagementDto">
+		select r.reportNo,r.processState, r.userId , r.uniqueNo , r.reportRegDate , r.reportContent , g.userId as reportuser , g.blockState as reportstate 
+		from report r left join groupBuyingPost g on r.uniqueNo =g.gbNo where r.reportNo = #{param1}
+	</select>
+	
+	<select id="reportDetailR" resultType="kr.co.morae.admin.dto.ReportManagementDto">
+		select r.reportNo,r.processState, r.userId , r.uniqueNo , r.reportRegDate , r.reportContent , c.userId as reportuser , c.commState as reportstate
+		from report r left join groupBuyingComment c on r.uniqueNo =c.commNo where r.reportNo = #{param1}
+	</select>
+	
+	<update id="hisstatech">
+		update report set processState = #{param1} where reportNo = #{param2}
+	</update>
+	
+	<insert id="inserthistory">	
+		insert into reportProcessHistory (reportNo,reportHistory,processorId,processDate) 
+		values(#{param1},#{param2},#{param3}, curdate());
+	</insert>
+	
+	<select id="hislist" resultType="map" >
+		select reportProcessNo, processorId , reportHistory , processDate from reportProcessHistory r where reportNo = #{param1}
+	</select>	
+	
+	
+	<select id="uninum" resultType="Integer">
+		select gbNo from groupBuyingComment where commNo = #{param1}	
+	</select>
+	
+	
+	
+	
+	
+	
+	
+</mapper>

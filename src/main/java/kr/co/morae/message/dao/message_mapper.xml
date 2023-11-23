@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.morae.message.dao.MessageDao">
+	
+	<select id="nameCheck" resultType="String">
+		select userId from user where nickname = #{param1}
+	</select>
+		
+	<select id="nickNameId" resultType="String">
+		select userId from user where nickname = #{param1}
+	</select>
+	
+	<insert id="msgSend" parameterType="Map">
+		INSERT INTO messages (messageContent,sentDate,messageRead,sener,reciever)
+			VALUES (#{param1}, now(), 'N', #{param2}, #{param3})
+	</insert>
+	
+	<select id="rcvList" resultType="kr.co.morae.message.dto.MessageDto">
+		select m.messagesNo, SUBSTRING(m.messageContent, 1, 20) as messageContent, m.sentDate, m.messageRead, m.sener, u.nickname as 'senerNickName'
+	from user u
+		left join messages m on u.userId = m.sener
+		where reciever = #{param1} order by messagesNo desc limit 5 offset #{param2}
+	</select>
+	
+	<select id="rcvPages" resultType="int">
+		select ceil(count(messagesNo)/5) as pages from messages where reciever = #{param1}
+	</select>
+	
+	<select id="sendList" resultType="kr.co.morae.message.dto.MessageDto">
+		select m.messagesNo, SUBSTRING(m.messageContent, 1, 20) as messageContent, m.sentDate, m.messageRead, m.sener, u.nickname as 'senerNickName'
+	from user u
+		left join messages m on u.userId = m.sener
+		where sener = #{param1} order by messagesNo desc limit 5 offset #{param2}
+	</select>
+	
+	<select id="sendPages" resultType="int">
+		select ceil(count(messagesNo)/5) as pages from messages where sener = #{param1}
+	</select>
+	
+	<select id="msgDetail" resultType="kr.co.morae.message.dto.MessageDto">
+		SELECT u_sener.nickname AS 'senerNickName',
+			        u_reciever.nickname AS 'recieverNickName',
+			        m.messageContent,
+			        m.messagesNo,
+			        m.sentDate FROM messages m
+						LEFT JOIN user u_sener ON u_sener.userId = m.sener
+						LEFT JOIN user u_reciever ON u_reciever.userId = m.reciever
+						WHERE m.messagesNo = #{param1}
+	</select>
+	
+	<update id="msgRead">
+		update messages set messageRead = 'Y' where messagesNo = #{param1}
+	</update>
+	
+	<delete id="msgDel" >
+		delete from messages where messagesNo = #{param1}
+	</delete>
+	
+	<delete id="msgRcvAllDel" >
+		delete from messages where reciever = #{param1}
+	</delete>
+	
+	<delete id="msgSendAllDel" >
+		delete from messages where sener = #{param1}
+	</delete>
+	
+	<select id="msgAlram" resultType="int">
+		select count(messageRead) from messages where reciever = #{param1} and messageRead = 'N'
+	</select>
+	
+</mapper>

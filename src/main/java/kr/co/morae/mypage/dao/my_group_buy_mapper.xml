@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.morae.mypage.dao.MyGroupBuyDao">
+	
+	<select id="getJoinMyGbList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+			SELECT g.gbNo, g.finishDate, SUBSTRING(g.title, 1, 30) title ,g.startDate , g.recruitPeople, g.gbState, g2.joinState 
+			, g.joinPrice, c2.categoryType, u.nickname,
+			(select count(ur.userId)
+			from userReview ur
+			where ur.gbNo = g.gbNo and ur.reviewerId like #{param1}
+			) isReview,
+			(SELECT COUNT(g3.gbNo)
+			FROM groupBuyingJoining g3 
+			WHERE g3.gbNo = g.gbNo
+			) joinPeople,
+			(SELECT COUNT(g3.joinState)
+			FROM groupBuyingJoining g3 
+			WHERE g3.gbNo = g.gbNo AND g3.joinState like 'Y'
+			) completeNum
+			FROM groupBuyingPost g LEFT OUTER JOIN groupBuyingJoining g2 
+			ON g.gbNo = g2.gbNo
+			LEFT OUTER JOIN category c2 
+			ON g.categoryNo = c2.categoryNo 
+			LEFT OUTER JOIN userReview ur
+			ON ur.gbNo = g.gbNo 
+			LEFT OUTER JOIN user u
+			ON u.userId = g.userId
+			WHERE g2.userId = #{param1} and g.blockState like 'N'
+			group by g.gbNo
+			order by g.regDate desc
+			LIMIT 10 OFFSET #{param2}
+	</select>
+	
+	<select id="getRecuritMyGbList" resultType="kr.co.morae.groupbuy.dto.GroupBuyDto">
+		select g.gbNo, g.finishDate, substring(g.title, 1, 30) title ,g.startDate , g.recruitPeople,
+			g.gbState , g.joinPrice, c2.categoryType,
+			(select count(g3.gbNo)
+			from groupBuyingJoining g3 
+			where g3.gbNo = g.gbNo
+			) joinPeople
+			from groupBuyingPost g left outer join groupBuyingJoining g2 
+			on g.gbNo = g2.gbNo
+			left outer join category c2 
+			on g.categoryNo = c2.categoryNo 
+			where g.userId = #{param1} and g.blockState like 'N'
+			group by g.gbNo
+			order by g.regDate desc
+			LIMIT 10 OFFSET #{param2}
+	</select>
+	
+	<!-- 참여, 모집 공구글 개수 -->
+	<select id="getRecruitMyGbListCnt" resultType="int">
+		SELECT COUNT(g.gbNo)
+		FROM groupBuyingPost g
+	 	WHERE g.userId = #{param1} AND g.blockState LIKE 'N'
+	</select>
+	
+	<select id="getJoinMyGbListCnt" resultType="int">
+		SELECT COUNT(g2.gbNo)
+		FROM groupBuyingPost g LEFT OUTER JOIN groupBuyingJoining g2 
+		ON g.gbNo = g2.gbNo
+		AND g2.userId = #{param1} and g.blockState like 'N'
+	</select>
+	
+	<!-- 공구 참여 완료 -->
+	<update id="setComplete">
+	UPDATE groupBuyingJoining SET joinState = 'Y' WHERE gbNo = #{param1} AND userId = #{param2}
+	</update>
+	
+	<!-- 참여자들이 참여 완료를 눌렀는지 확인하는 sql -->
+	<select id="checkComplete" resultType="kr.co.morae.groupbuy.dto.GbStateCheckDto">
+	SELECT g.recruitPeople, g.gbNo, g.joinPrice, g.userId,
+		(SELECT COUNT(joinState)
+			FROM groupBuyingJoining g3 
+			WHERE g3.gbNo = g.gbNo AND joinState LIKE 'Y'
+		) completeCnt
+	FROM groupBuyingPost g LEFT OUTER JOIN groupBuyingJoining g2 
+	ON g.gbNo = g2.gbNo
+	WHERE g.gbNo = #{param1}
+	group by g.gbNo
+	</select>
+	
+	<insert id="ratin" >	
+	INSERT INTO userReview (userId ,gbNo,reviewNo,reviewerId) 
+	values ((SELECT userId FROM groupBuyingPost gbp WHERE gbNo = #{param1}),#{param1},#{param3},#{param2})
+	</insert>  
+
+	
+	
+</mapper>

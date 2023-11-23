@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+<mapper namespace="kr.co.morae.admin.dao.UserManagementDao">	
+	
+	<select id="userlist" resultType="kr.co.morae.user.dto.UserDto">
+		select userId, nickname, reg_date from user order by reg_date desc LIMIT 10 OFFSET #{param1}
+	</select>
+	
+	<select id="authlist" resultType="kr.co.morae.admin.dto.AuthDto">
+		select u.userId , a.authType, a.authNo from userAuth u left outer join author a 	on u.authNo = a.authNo ;
+	</select>
+	
+	<select id="allnum" resultType="Integer" >
+		select count(userId)/10 from `user` u 
+	</select>	
+	
+	<select id="reserchuser" resultType="kr.co.morae.user.dto.UserDto">
+		select userId, nickname, reg_date from user where userId = #{param1}
+	</select>
+	
+	<select id="reserchauth" resultType="kr.co.morae.admin.dto.AuthDto">
+		select u.userId , a.authType, a.authNo from userAuth u left outer join author a 	on u.authNo = a.authNo ;
+	</select>
+	
+	
+	
+	
+	
+	<select id="userdetail" resultType="map">
+		select u.userId ,u.nickname ,u.name ,u.age ,u.gender ,u.email ,u.reg_date 
+		,concat( ad.streetAddress, ad.userDetailAddress,ad.detailAddress) as addr 
+		from `user` u left join userAddress ad using(userId) where userId = #{param1}		
+	</select>
+	
+	<insert id="gardsave">
+		insert into userAuth (userId,authNo) values(#{param1},'4');
+	</insert>
+	
+	<delete id="nomaluser">
+		delete from userAuth where userId = #{param1} and authNo ='4';
+	</delete>
+	
+	<delete id="statedel">
+		delete from userAuth where userId = #{param1} and authNo ='2';
+	</delete>
+	
+	<insert id="stateins">
+		insert into userAuth (userId,authNo) values(#{param1},'2');
+	</insert>
+	
+	<insert id="hisasave">
+		insert into UserBlockHistory (blockedId, blockDate,blockReason, blockerId) 
+		values(#{param1}, curdate(),#{param3},#{param2});
+	</insert>
+	
+	
+	<select id="UBhislist" resultType="map">
+		select  blockNo , blockerId , blockReason ,blockDate from UserBlockHistory where blockedId = #{param1}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	</mapper>

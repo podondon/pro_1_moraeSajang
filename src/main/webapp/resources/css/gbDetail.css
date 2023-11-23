@@ -1,0 +1,194 @@
+@charset "UTF-8";
+.detail-joinicon{
+	width: 26%;
+	float: right;
+}
+.info-label{
+	width:100px;
+	color: darkgray;
+}
+.joinicon-span{
+	float:right;
+}
+#productsInfo{
+	display: flex;
+	
+}
+.elem-container{
+	width: 60%;
+	min-width: 800px;
+	margin: 0 auto;
+	margin-top: 100px;
+	margin-bottom: 100px;
+}
+.smallInfo{
+	margin-top: 13px;
+	margin-bottom: 10px;
+}
+
+
+.witer-olny{
+	float:right;
+	overflow: auto;
+	margin-bottom: 5px;
+}
+.report2{
+	float:right;
+	
+}
+.commentHead{
+	padding:5px;
+	background-color:#F9DCA3;
+}
+.comment-h3{
+	padding-left: 15px;
+}
+#comment{
+	width: 100%;
+	height: 120px;
+	resize: none;
+	margin: 0 auto;
+}
+#commentWriteBox{
+	display: flex;
+    width: 100%;
+    height: 200px;
+    justify-content: center;
+}
+#commentWriteBox div{
+	width: 90%;
+
+}
+.btn-disabled{
+	padding: 2px 10px;
+	border-radius: 5px;
+	margin-right: 0px 15px 2px 0px;
+	bo
+}
+div.container{
+	width: auto;
+	margin: 0 auto;
+	margin-top: 40px;
+	margin-left:0px !important;
+}
+#gbContent{
+	padding: 5px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+	padding-left: 20px;
+	resize: none;
+	min-height: 300px;
+	max-height: 500px;
+}
+nav{
+	margin: 0 auto;
+	width: 100%;
+}
+
+.review{
+	margin-right: 10px;
+	font-size: 0.9em;
+}
+.write-div{
+	display: flex;
+	width: 100%;
+}
+.comment-elem-div{
+	margin-top:30px;
+	width: 662px;
+}
+.comment-div{
+	
+	border: 1px solid lightgray;	
+	margin: 0 auto;
+}
+#commentWrite{
+	margin-left: auto;
+	margin-right: 20px;
+}
+#productImgBox{
+	border: 1px solid lightgray;
+	margin-right: 44px;
+	margin-top: 20px;
+	height: 100%;
+}
+.comment-box{
+	margin-bottom: 4px;
+}
+.commentBody{
+	margin-left: 24px;
+	margin-right: 24px;
+}
+.big-info{
+	margin: 0 auto;
+	width: 100%;
+	padding: 10px 20px;
+}
+.subContent{
+	width: 96%;
+	margin: 0 auto;
+}
+.section{
+	margin-top: 20px;
+	margin-bottom: 40px;
+}
+#gbContent{
+	resize: none;
+}
+.commentContent{
+	width:100%;
+	height: 80px;
+	resize: none;
+	border: none;
+	padding: 10px;
+}
+.gb-report-div{
+	display: flex;
+	margin-bottom: 100px;
+}
+#reportBtn{
+	border-style:none;
+	background-color: transparent;
+	margin-left: auto;	
+	
+}
+#reportBtn img{
+width: 30px;
+	height: 30px;
+}
+.date{
+	padding: 5px 10px;
+	margin-bottom: 5px;
+}
+.comm-wirte-btn{
+	margin-left: 10px;
+}
+.report{
+	border-style:none;
+	background-color: transparent;
+	margin-left: auto;
+}
+.report img{
+	width: 20px;
+	height:20px;
+}
+.bottom-btn{
+	display: flex;
+}
+.bottom-btn div{
+	margin: 0 auto;
+}
+.comm-btn{
+	background-color:#F9DCA3; 
+	border-style: none;
+	border-radius: 5px;
+	padding: 0.5px 5px 0.5px 5px;
+}
+.btn-disabled{
+	padding: 0.5px 5px 0.5px 5px;
+	margin-right: 100px;
+}
+
+.modify{
+	margin-left: 5px;
+}

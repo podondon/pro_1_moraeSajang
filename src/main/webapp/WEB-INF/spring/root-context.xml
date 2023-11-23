@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- upload 규칙 3: 업로드 할 크기를 지정해 준다. -->
+	<!-- encoding 설정 -->
+	<!-- 업로드 크기 설정(maxFileSize) -->
+	<!-- 버퍼에 저장할 용량(fileSizeThreshold) -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"/>
+		<property name="maxUploadSize" value="50000000"/>
+		<property name="maxInMemorySize" value="50000000"/>
+	</bean>
+</beans>

@@ -1,0 +1,328 @@
+@charset "UTF-8";
+.container{
+	width: 70%px;
+	margin: 0 auto;
+}
+.bottom-btn-div{
+	margin-bottom: 100px;
+}
+#gbContent{
+    width: 90%;
+    height: 400px;
+    overflow: auto;
+    resize: none;
+}
+.kakaoApiPosition{
+	padding: 0;
+	height: 400px;
+	margin-top: 0px;
+	margin: 0px 15px 0px 15px;
+}
+#image-input{
+	position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+.file{
+	margin-left: 15px;
+}
+#title{
+    width: 90%;
+}
+
+ul.tabs{
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+}
+ul.tabs li{
+	background: none;
+	color: #222;
+	display: inline-block;
+	padding: 10px 15px;
+	cursor: pointer;
+	border: 2px solid #FFBC38;
+	border-bottom:none;
+  	border-top-left-radius:5px;
+  	border-top-right-radius:5px;
+  	color:#FFBC38;
+  	margin: 0px;
+  	
+}
+
+ul.tabs li.current{
+  background-color: #FFBC38;
+  border: 2px solid #FFBC38;
+  color:white;
+}
+.tab-content{
+	display: none;
+}
+div.current{
+	display:flex;
+	padding:0px;
+}	
+ul.ul-list{
+	 list-style:none;
+	 padding-left:0;
+}
+#recruitLocation{
+	
+}
+div{
+    margin-top: 16px;
+}
+label{
+    float: left;
+}
+input{
+    border: 1px solid black;
+}
+.input-content{
+	height: inherit;
+	padding:0px;
+	width: 30%;
+}
+.btnClear{
+	height: 30px;
+  background-color: #FFBC38;
+  border: 2px solid #FFBC38;
+  color:white;
+  height: 25px;
+  width: 25px;
+  padding: 0;
+  border-radius: 5px;
+}
+.smallIfo{
+    display:flex;
+}
+#recruitDiv{
+	    display:flex;
+}
+.detail-info{
+    display:flex;
+    padding-right: 10px;
+    padding-right: 20px;
+}
+.map-position{
+	margin:0;
+    height: inherit;
+    width: 75%;
+    border: 2px solid #FFBC38;
+    border-right: none;
+}
+.place-ul-div{
+	height: inherit;
+    width: 25%;
+    
+}
+
+.recommend{
+    height: inherit;
+    width: 25%;
+    float: left;
+    margin: 0;
+    border: 2px solid #FFBC38;
+}
+.ul-list{
+    width: 100%;
+    margin: 0;
+    
+}
+li.placeElem{
+	padding: 10px 15px;
+	border-bottom: 1px solid #FFBC38;
+}
+.placeListDiv{
+    overflow: auto;
+    width: 100%;
+    height: 90%;
+    margin: 0;
+}
+.option div form{
+	margin: 0px;
+	margin: 10px 15px;
+}
+.option div{
+	margin: 0px;
+	height: inherit;
+}
+.recommend p{
+	height: 10%;
+	text-align: center;
+	margin-bottom: 0;
+	padding-top: 10px;
+	border-bottom: 2px solid #FFBC38;
+}
+.reommElem{
+    border: 1px solid lightgrey;
+    list-style:none;
+}
+#menu_wrap{
+    overflow: auto;
+    width: 100%;
+    height: 80%;
+}
+#pagination {margin:10px auto;text-align: center;}
+#pagination a {display:inline-block;margin-right:10px;}
+#pagination .on {font-weight: bold; cursor: default;color:#777;}
+#image-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+  height: 194px;
+  margin: 0px 15px 0px 15px;
+}
+
+.image-thumbnail {
+	margin-top:0;
+  width: 190px;
+  height: inherit;
+  position: relative;
+}
+
+.image-thumbnail img {
+  max-width: 190px;
+  max-height: 190px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  background-color: #FFBC38;
+  border: 2px solid #FFBC38;
+  color:white;
+  border-radius: 100%;
+  text-align: center;
+  
+  font-weight: 600%;
+  padding:0px;
+}
+#locationBtn{
+	display:flex;
+	padding-left: 15px;
+}
+.center{
+	width: 60%;
+	margin: 0 auto;
+	
+}
+.bottom-btn-div{
+	display: flex;
+	justify-content: center;
+}
+#selectBtn{
+	width: 80px;
+	height: inherit;
+	margin-left: auto;
+	margin-right: 15px;
+}
+.validation{
+    color: red;
+}
+#h3{
+    font-size: 25px;
+    margin: 20px 0px 0px 15px;
+}
+.h3Validation{
+    font-size: 12px;
+}
+
+#productImg{
+	height: 240px;
+	margin-bottom: 12px;
+}
+#kakaoApi {
+float: left;
+}
+.option{
+	margin: 0px;
+	border-bottom: 2px solid #FFBC38;
+	
+}
+#recruitLocation{
+	resize:none;
+	width: 99%;
+	margin: 0;
+}
+.palceListDiv{
+	height: 80%;
+}
+#info__id {
+  position: relative;
+  margin-right: 10px;
+  width: inherit;
+  height: inherit;
+  margin: 0px;
+  padding: 0px;
+ 
+}
+#keyword{
+	width: 100%;
+	border:none;
+	border-radius: 5px;
+	padding: 5px 2px;
+	
+}
+#image-input{
+	margin-left: 15px;
+}
+#info__id button {
+	border-style:none;
+	background-color: transparent;
+  	position: absolute;
+  	width: 35px;
+  	height: 35px;
+  	top: 0;
+  	bottom: 0;
+  	right: 5px;
+  	margin: auto 0;
+  	border-radius: 3px;
+}
+.label-div{
+	width: 120px;
+	float: left;
+	margin: 0;
+	margin-left: 15px;
+}
+.comm-btn{
+	background-color: #FFBC38;
+	  border: 2px solid #FFBC38;
+	  color:white;
+	  border-radius: 5px;
+}
+.input-value{
+	border: 1px solid darkgray;
+	border-radius: 5px;
+}
+#submit{
+	margin-right: 50px;
+}
+#contentDiv{
+	margin-bottom: 50px;
+}
+#titleDiv{
+	margin-top: 40px;
+}
+
+.placeListDiv::-webkit-scrollbar {
+    width: 8px;  /* 스크롤바의 너비 */
+}
+
+.placeListDiv::-webkit-scrollbar-thumb {
+    height: 20%; /* 스크롤바의 길이 */
+    background: #FFBC38; /* 스크롤바의 색상 */
+    
+    border-radius: 10px;
+}
+
+.placeListDiv::-webkit-scrollbar-track {
+    background: rgba(255, 188, 56, 0.2);  /*스크롤바 뒷 배경 색상*/
+}

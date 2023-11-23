@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd"
+>
+
+<mapper namespace="kr.co.morae.alarm.dao.AlarmDao">
+
+	<select id="alarm" resultType="kr.co.morae.alarm.dto.AlarmDto">
+		SELECT a.alarmAddr, ah.gbNo, gbp.title FROM alarm a, alarmHistory ah, groupBuyingPost gbp 
+		WHERE ah.gbNo = gbp.gbNo AND ah.userId = #{param1} AND ah.alarmRead = 'N' ORDER BY ah.gbNo DESC
+	</select>
+
+	<delete id="alarmRemove">
+		DELETE FROM alarmHistory WHERE gbNo IN (SELECT gbNo FROM alarmHistory
+		ah WHERE gbNo IN
+		(SELECT gbNo FROM groupBuyingPost gbp <![CDATA[WHERE regDate < DATE_ADD(NOW(), INTERVAL -1 WEEK) AND NOW())]]>)
+	</delete>
+	
+	<select id="alarmUpdate" resultType="kr.co.morae.alarm.dto.AlarmDto">
+		SELECT gbNo FROM groupBuyingRegions
+		WHERE gbNo NOT IN (SELECT gbNo From alarmHistory ah WHERE userId = #{param1}) AND
+		gbDetailAddress = (SELECT userDetailAddress FROM userAddress WHERE userId = #{param1})
+		AND gbNo
+		IN (select gbNo FROM groupBuyingPost WHERE regDate BETWEEN
+		DATE_ADD(NOW(), INTERVAL -1 WEEK) AND NOW())
+	</select>
+	
+	<update id="alarmHistoryup">
+		INSERT INTO alarmHistory (userId, alarmNo, gbNo, alarmRead) VALUES (#{param1},1,#{param2},'N')
+	</update>
+	
+	<update id="alarmRead">
+		UPDATE alarmHistory SET alarmRead = 'Y' WHERE userId = #{param1} AND gbNo = #{param2}
+	</update>
+	
+	<update id="alarmReadAll">
+		UPDATE alarmHistory SET alarmRead = 'Y' WHERE userId = #{param1}
+	</update>
+	
+</mapper>
